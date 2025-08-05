@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Time Tracker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">T</div>
+        <h1>Time Tracker</h1>
+      </div>
+      <div class="small-info">
+        <span>Auto-reset by period</span>
+        <span>LocalStorage</span>
+      </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <div class="tabs">
+      <div class="tab active" data-tab="timers">Timers</div>
+      <div class="tab" data-tab="logs">Logs</div>
+    </div>
+
+    <!-- Timers Page -->
+    <div id="timers-page" class="page active">
+      <div class="panel">
+        <div class="sub">Create goals and track time that resets per day, week, or month.</div>
+        <div class="form-row">
+          <div class="field">
+            <label for="name">Goal</label>
+            <input id="name" type="text" placeholder="e.g., Study, Football" />
+          </div>
+          <div class="field">
+            <label for="hours">Hours</label>
+            <input id="hours" type="number" min="0" step="0.25" placeholder="4" />
+          </div>
+          <div class="field">
+            <label for="minutes">Minutes</label>
+            <input id="minutes" type="number" min="0" max="59" step="5" placeholder="0" />
+          </div>
+          <div class="field">
+            <label for="period">Per</label>
+            <select id="period">
+              <option value="day">Day</option>
+              <option value="week" selected>Week</option>
+              <option value="month">Month</option>
+            </select>
+          </div>
+          <div class="actions">
+            <button id="addBtn" class="btn">Add</button>
+            <button id="pauseAll" class="btn ghost">Pause All</button>
+            <button id="resetAll" class="btn ghost">Reset All</button>
+            <button id="clearStorage" class="btn ghost danger">Clear All Data</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timers heading -->
+      <div id="activeTitle" class="section-title" style="display:none;">Added Timers</div>
+      <div id="list" class="list"></div>
+    </div>
+
+    <!-- Logs Page -->
+    <div id="logs-page" class="page">
+      <div class="panel">
+        <div class="logs-header">
+          <h2 style="margin: 0; font-size: 18px;">Daily Logs</h2>
+          <div class="date-nav">
+            <button id="prevDay" class="btn small ghost">← Prev</button>
+            <div id="currentDate" class="current-date"></div>
+            <button id="nextDay" class="btn small ghost">Next →</button>
+          </div>
+        </div>
+        <div class="sub">View your daily time tracking history.</div>
+      </div>
+      <div id="logs-content"></div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/timer.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
