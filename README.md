@@ -9,6 +9,7 @@ A clean, modern time tracking application that helps you manage your goals and t
 - Set automatic reset periods (daily, weekly, or monthly)
 - Real-time countdown with visual progress indicators
 - Start, pause, reset, and edit timers
+- **Manual time addition** - add completed time manually with flexible input formats
 - Status indicators (Running, Paused, Completed, Not Started)
 
 ### 📊 Logs & Analytics
@@ -63,6 +64,7 @@ time-tracker/
 - **Pause**: Temporarily stop the timer
 - **Reset**: Reset timer to full duration
 - **Edit**: Modify timer settings
+- **+ Time**: Add completed time manually (supports formats like "1h 30m", "90m", "2.5h")
 - **Delete**: Remove a timer permanently
 
 ### Viewing Logs
@@ -70,6 +72,26 @@ time-tracker/
 2. Use Previous/Next buttons to navigate dates
 3. View daily summaries and task breakdowns
 4. See total time spent per day
+
+### Manual Time Addition
+The "+ Time" feature allows you to add completed time manually to any timer:
+
+1. Click the subtle "+ Time" button on any timer card
+2. Enter time using flexible formats:
+   - `"1h 30m"` - hours and minutes
+   - `"90m"` or `"90 minutes"` - minutes only
+   - `"2.5h"` or `"1.5 hours"` - decimal hours
+   - `"45"` - plain number (assumes minutes)
+3. Time is automatically:
+   - Added to the timer's completed progress
+   - Reduced from remaining time
+   - Logged in your daily time tracking
+
+This feature is perfect for:
+- Adding time worked offline
+- Accounting for work done in other applications
+- Manual adjustments and corrections
+- Backfilling forgotten time entries
 
 ## GitHub Pages Deployment
 

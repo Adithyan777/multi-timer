@@ -134,10 +134,108 @@ const UI = {
       case 'edit':
         this.editTimer(timer);
         break;
+      case 'add-time':
+        this.addTimeToTimer(timer);
+        break;
     }
 
     Storage.save(App.state);
     this.render();
+  },
+
+  addTimeToTimer(timer) {
+    const input = prompt('Add completed time (format: "1h 30m" or "90m" or "1.5h"):');
+    if (input === null || input.trim() === '') return;
+
+    const timeMs = this.parseTimeInput(input.trim());
+    if (timeMs === null) {
+      alert('Invalid time format. Use formats like: "1h 30m", "90m", "1.5h", or "2h"');
+      return;
+    }
+
+    if (timeMs <= 0) {
+      alert('Please enter a positive time amount.');
+      return;
+    }
+
+    // Add the time to completed and reduce remaining
+    const prevCompleted = timer.completedMs;
+    const prevRemaining = timer.remainingMs;
+    
+    timer.completedMs = Math.min(timer.targetMs, timer.completedMs + timeMs);
+    timer.remainingMs = Math.max(0, timer.remainingMs - timeMs);
+
+    const actualAdded = timer.completedMs - prevCompleted;
+
+    // Log the manually added time
+    if (actualAdded > 0) {
+      Storage.logTime(timer.name, actualAdded);
+    }
+
+    Storage.save(App.state);
+    this.render();
+  },
+
+  parseTimeInput(input) {
+    // Remove extra spaces and convert to lowercase
+    const cleaned = input.toLowerCase().replace(/\s+/g, ' ').trim();
+    
+    // Pattern to match various time formats
+    const patterns = [
+      // "1h 30m" or "1 h 30 m" 
+      /^(\d+(?:\.\d+)?)\s*h(?:ours?)?\s+(\d+(?:\.\d+)?)\s*m(?:in(?:utes?)?)?$/,
+      // "30m" or "30 minutes"
+      /^(\d+(?:\.\d+)?)\s*m(?:in(?:utes?)?)?$/,
+      // "1h" or "1.5h" or "1 hour"
+      /^(\d+(?:\.\d+)?)\s*h(?:ours?)?$/,
+      // "90" (assume minutes)
+      /^(\d+(?:\.\d+)?)$/
+    ];
+
+    let totalMs = 0;
+
+    // Try "Xh Ym" format
+    let match = cleaned.match(patterns[0]);
+    if (match) {
+      const hours = parseFloat(match[1]);
+      const minutes = parseFloat(match[2]);
+      if (!isNaN(hours) && !isNaN(minutes) && hours >= 0 && minutes >= 0 && minutes < 60) {
+        return (hours * 60 + minutes) * 60 * 1000;
+      }
+      return null;
+    }
+
+    // Try "Xm" format
+    match = cleaned.match(patterns[1]);
+    if (match) {
+      const minutes = parseFloat(match[1]);
+      if (!isNaN(minutes) && minutes >= 0) {
+        return minutes * 60 * 1000;
+      }
+      return null;
+    }
+
+    // Try "Xh" format
+    match = cleaned.match(patterns[2]);
+    if (match) {
+      const hours = parseFloat(match[1]);
+      if (!isNaN(hours) && hours >= 0) {
+        return hours * 60 * 60 * 1000;
+      }
+      return null;
+    }
+
+    // Try plain number (assume minutes)
+    match = cleaned.match(patterns[3]);
+    if (match) {
+      const minutes = parseFloat(match[1]);
+      if (!isNaN(minutes) && minutes >= 0) {
+        return minutes * 60 * 1000;
+      }
+      return null;
+    }
+
+    return null;
   },
 
   editTimer(timer) {
@@ -230,6 +328,7 @@ const UI = {
             : ''
           }
           <button class="btn small secondary" data-action="edit" data-id="${timer.id}">Edit</button>
+          <button class="btn small tertiary" data-action="add-time" data-id="${timer.id}" title="Add completed time manually">+ Time</button>
           <button class="btn small danger" data-action="delete" data-id="${timer.id}">Delete</button>
         </div>
 
